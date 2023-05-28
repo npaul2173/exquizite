@@ -3,13 +3,20 @@ import express from "express";
 import { foodRoute } from "../routes/product";
 import { ProductModel } from "../models/products";
 import dotenv from "dotenv";
+import { topicRoute } from "../routes/topic";
 // module.exports = mongoose;
 
 dotenv.config();
 const app = express();
 
-app.listen(4000, () => {
-  console.log("Exquizite: Server is running...");
+// Parse JSON bodies
+app.use(express.json());
+
+// Parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
+
+app.listen(process.env.PORT, () => {
+  console.log(`Exquizite: Server is running at PORT ${process.env.PORT}`);
 });
 
 mongoose
@@ -24,11 +31,7 @@ mongoose
     console.log("⚔️ Error connecting to MongoDB:", error);
   });
 
-app.get("/", (req, res) =>
-  res.send(`Welcome to exquizite ${process.env.SECRET}`)
-);
-
-console.log(process.env.SECRET);
+app.get("/", (_, res) => res.send(`Welcome to Exquizite`));
 
 app.post("/product/create", async (_, response) => {
   const food = new ProductModel({
@@ -45,3 +48,4 @@ app.post("/product/create", async (_, response) => {
 });
 
 app.use(foodRoute);
+app.use(topicRoute);
