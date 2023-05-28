@@ -1,9 +1,9 @@
 import mongoose, { ConnectOptions } from "mongoose";
 import express from "express";
 import { foodRoute } from "../routes/product";
-import { ProductModel } from "../models/products";
 import dotenv from "dotenv";
 import { topicRoute } from "../routes/topic";
+import { quizRoute } from "../routes/quiz";
 // module.exports = mongoose;
 
 dotenv.config();
@@ -33,19 +33,6 @@ mongoose
 
 app.get("/", (_, res) => res.send(`Welcome to Exquizite`));
 
-app.post("/product/create", async (_, response) => {
-  const food = new ProductModel({
-    productName: "Scissors",
-    prodDescription: "Best scissors ever!",
-  });
-
-  try {
-    await food.save();
-    response.send({ food });
-  } catch (error) {
-    response.status(500).send(error);
-  }
-});
-
 app.use(foodRoute);
 app.use(topicRoute);
+app.use(quizRoute);
