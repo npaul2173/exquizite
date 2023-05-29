@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { TopicModel } from "../../models/topic";
 import { StatusCodes } from "http-status-codes";
+import { listSearchParams } from "../../common/types";
 
 export const create = async (request: Request, response: Response) => {
   console.log(request.body.name);
@@ -25,13 +26,11 @@ export const create = async (request: Request, response: Response) => {
 };
 
 export const list = async (request: Request, response: Response) => {
-  console.log(request.body.search);
-  const search = request.body.search;
+  const { searchText } = { ...request.body } as listSearchParams;
+  let query = {};
+  if (searchText) query = { topicName: { $regex: searchText, $options: "i" } };
   try {
-    const responseData = await TopicModel.find({
-      topicName: { $regex: search, $options: "i" },
-    });
-
+    const responseData = await TopicModel.find(query);
     response.status(StatusCodes.OK).send({ response: responseData });
   } catch (error) {
     response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ error });
