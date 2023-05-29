@@ -1,12 +1,17 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { QuestionModel } from "../../models/question";
+import { QuizModel } from "../../models/quiz";
 
 export const addQuestions = async (request: Request, response: Response) => {
   const questions = request.body.questions;
 
   try {
-    if (questions) {
+    // Checking if any Quiz even exist of this ID, else will throw a error
+    const isQuizExisting = await QuizModel.findOne({
+      _id: request.body.quizId,
+    });
+    if (isQuizExisting) {
       const questionsData = request.body.questions.map((item: any) => ({
         ...item,
         quizId: request.body.quizId,
@@ -18,6 +23,10 @@ export const addQuestions = async (request: Request, response: Response) => {
         status: false,
       });
     } else {
+      response.status(StatusCodes.CONFLICT).send({
+        message: "No Quiz exist of that ID",
+        status: false,
+      });
     }
   } catch (error) {
     response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
