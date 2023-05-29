@@ -4,11 +4,21 @@ import { StatusCodes } from "http-status-codes";
 
 export const create = async (request: Request, response: Response) => {
   console.log(request.body.name);
-  const topic = new TopicModel({ topicName: request.body.name });
 
   try {
-    const responseData = await topic.save();
-    response.status(StatusCodes.CREATED).send({ response: responseData });
+    const existingData = await TopicModel.findOne({
+      topicName: request.body.name,
+    });
+    if (existingData) {
+      response.status(StatusCodes.CONFLICT).send({
+        status: false,
+        message: "Topic with the same name already exists",
+      });
+    } else {
+      const topic = new TopicModel({ topicName: request.body.name });
+      const responseData = await topic.save();
+      response.status(StatusCodes.CREATED).send({ response: responseData });
+    }
   } catch (error) {
     response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ error: error });
   }
