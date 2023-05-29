@@ -33,3 +33,8 @@ These instructions will get you a copy of the Exquizite backend up and running o
 ### Installation
 
 1. Clone the repository:
+
+### Libraries used
+
+mongoose
+Express
