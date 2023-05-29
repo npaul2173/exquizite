@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { QuizModel } from "../../models/quiz";
 import { QuestionModel } from "../../models/question";
 import { listSearchParams } from "../../common/types";
+import { addQuestions } from "./questions";
 
 export const createQuiz = async (request: Request, response: Response) => {
   const quizInputData = request.body.quiz;
@@ -50,3 +51,5 @@ export const listQuizzes = async (request: Request, response: Response) => {
 
   response.status(StatusCodes.OK).send({ response: listData });
 };
+
+export { addQuestions };
