@@ -1,6 +1,5 @@
 import mongoose, { ConnectOptions } from "mongoose";
 import express from "express";
-import { foodRoute } from "../routes/product";
 import dotenv from "dotenv";
 import { topicRoute } from "../routes/topic";
 import { quizRoute } from "../routes/quiz";
@@ -33,6 +32,5 @@ mongoose
 
 app.get("/", (_, res) => res.send(`Welcome to Exquizite`));
 
-app.use(foodRoute);
 app.use(topicRoute);
 app.use(quizRoute);
